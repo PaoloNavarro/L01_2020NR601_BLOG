@@ -103,24 +103,40 @@ namespace L01_2020NR601.Controllers
         //nombre y apellido
         [HttpGet]
         [Route("find")]
-        public IActionResult buscarApellidoNombre(string filtro)
+        [HttpGet]
+        [Route("getbynombre/{nombre}/{apellido}")]
+        public IActionResult getNombreApellido(string nombre, string apellido)
         {
+            usuarios? usuario = (from e in _blogConext.usuarios
+                                where e.nombre == nombre && e.apellido == apellido
+                                select e).FirstOrDefault();
 
-            List<usuarios> usuarioList = (from e in _blogConext.usuarios
-                                         where e.nombre.Contains(filtro) || e.apellido.Contains(filtro)
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+            return Ok(usuario);
+        }
+
+        [HttpGet]
+        [Route("getbyrol/{rol}")]
+        public IActionResult getUserRol(int rol)
+        {
+            List<usuarios> userListRol = (from e in _blogConext.usuarios
+                                         where e.rolID == rol
                                          select e).ToList();
 
-            if (usuarioList.Any())
+            if (userListRol.Any())
             {
-                return Ok(usuarioList);
+                return Ok(userListRol);
             }
 
             return NotFound();
-
-
         }
 
-   
+
+
+
 
 
     }
